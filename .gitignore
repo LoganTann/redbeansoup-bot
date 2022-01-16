@@ -1,0 +1,8 @@
+.env
+
+# vscode ?
+registries
+
+# Discordeno
+fileloader.ts
+db/
