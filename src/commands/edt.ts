@@ -1,64 +1,75 @@
 import { ApplicationCommandTypes, InteractionResponseTypes } from "../../deps.ts";
-import { snowflakeToTimestamp } from "../utils/helpers.ts";
+import * as helpers from "../utils/helpers.ts";
+import { descalendrierEdt, descalendrierGroupes, getDescalendrier } from "../utils/descalendrier.ts";
 import { createCommand } from "./mod.ts";
 
-function parseCellDescription(description: string) :string {
-  const matches = description.match(/\n([A-Za-z_-]+)\s+([A-Za-z_-]+\s+)+/gm);
-  if (matches) {
-    return matches[0].replace(/  +/, " ").trim();
+interface embedField {
+  name: string,
+  value: string,
+  inline: boolean
+};
+
+const group = "209";
+function findEdt(group: string, groupList: descalendrierGroupes): descalendrierEdt[] {
+  for (const category of groupList) {
+    for (const catgroup of category.groupes) {
+      if (catgroup.titre == group) {
+        return catgroup.edt;
+      }
+    }
   }
-  return "<< Pas de prof (ou erreur ?) >>";
 }
-
-/**
- * https://discord.com/developers/docs/reference#message-formatting-timestamp-styles
- * @param date the date to convert
- * @returns the discord timestamp tag of the date
- */
-function dateToDiscordTimestamp(date :Date) :string {
-  return `<t:${(new Date(date).getTime() / 1000).toFixed(0)}:R>`;
-}
-
-const group = 209;
-
-/**
- * Extrais les données de descalendrier
- * @param calendar la réponse de l'api, https://descalendrier.jiveoff.fr/api/edt/XXX sous forme d'objet json
- */
-function parseEdtResult(calendar: any) {
-  const events = [];
-  for (const [cellId, ev] of Object.entries(calendar)) {
-    if (ev.type != "VEVENT") continue;
-    ev.name = ev.summary;
-    ev.start = new Date(ev.start);
-    ev.description = parseCellDescription(ev.description);
-    events.push(`${dateToDiscordTimestamp(ev.start)} - ${ev.name} => ${ev.description}`);
+async function getResult(): Promise<Array<embedField>>{
+  const edtList: descalendrierEdt[] = findEdt(group, await getDescalendrier());
+  let result = [];
+  for (const edt of edtList) {
+    const begin: Date = new Date(edt.start);
+    const hour = helpers.dateToDiscordTimestamp(begin, helpers.DiscordTimestampFlag.time);
+    const tmpdate = helpers.dateToDiscordTimestamp(begin, helpers.DiscordTimestampFlag.date);
+    const teacher = helpers.pseudonymizeTeacher(edt.enseignant);
+    const location = helpers.abbreviateBlockList(edt.location);
+    result.push({
+      name: edt.name + ' ' + tmpdate,
+      value: `**Heure**: ${hour}${teacher ? "\n**Ens**: "+teacher : ""}\n**Salle**: ${location}`,
+      inline: true
+    })
   }
-  return events.join("\n");
+  return result;
 }
 
 createCommand({
   name: "edt",
   description: "Obtenez l'EDT depuis l'API de Descalendrier",
   type: ApplicationCommandTypes.ChatInput,  
+
+  arguments: [
+
+  ],
+
   execute: async (Bot, interaction) => {
-    let resultString;
+    let result;
     try {
-      const jsonResponse = await fetch(`https://descalendrier.jiveoff.fr/api/edt/${group}`);
-      const jsonData = await jsonResponse.json();
-      resultString = parseEdtResult(jsonData);
-    } catch (e) {
-      resultString = e;
+      result = await getResult();
+    } catch (error) {
+      result = [{name: "Error", value: error, inline: false}];
     }
+
     await Bot.helpers.sendInteractionResponse(
       interaction.id,
       interaction.token,
       {
         type: InteractionResponseTypes.ChannelMessageWithSource,
         data: {
-          content: `redbeansoup a regardé Descalendrier et vous donne un résultat trop joli : \n${resultString}`,
-        },
-      },
+          content: `tmp`,
+          embeds: [{
+            title: "EDT",
+            type: "rich",
+            url: "https://edt.bde-faction.fr/",
+            author: "Descalendrier for Discord",
+            fields: result
+          }]
+        }
+      }
     );
-  },
+  }
 });
