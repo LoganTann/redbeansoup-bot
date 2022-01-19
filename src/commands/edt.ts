@@ -88,7 +88,8 @@ createCommand({
         type: "rich",
         url: "https://edt.bde-faction.fr/",
         author: { name: "Descalendrier pour Discord", iconUrl: "https://edt.bde-faction.fr/favicon.png" },
-        fields: await getResult(edtList, dateToSee)
+        fields: await getResult(edtList, dateToSee),
+        color: 14825785
       };
     } catch (error) {
       embedOut = {name: "Error", value: error, inline: false};
