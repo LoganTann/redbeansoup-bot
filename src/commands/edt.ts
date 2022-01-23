@@ -18,6 +18,7 @@ function findEdt(group: string, groupList: descalendrierGroupes): descalendrierE
       }
     }
   }
+  throw "Le groupe n'a pas été trouvé. Utilisez les valeurs de descalendrier : 101 - 112, 201- 209, Apprentissage";
 }
 
 async function getResult(edtList: descalendrierEdt[], dateToSee: Date): Promise<Array<embedField>>{
@@ -43,6 +44,7 @@ createCommand({
   name: "edt",
   description: "Obtenez l'EDT depuis l'API de Descalendrier",
   type: ApplicationCommandTypes.ChatInput,  
+  global: true,
   options: [
     {
       type: 3,
@@ -80,7 +82,7 @@ createCommand({
       const group: string = interaction.data.options[0].value;
       const edtList: descalendrierEdt[] = findEdt(group, await getDescalendrier());
       let dateToSee = new Date();
-      if (interaction.data.options.lenght > 1) {
+      if (interaction.data.options[1]?.value === "dm") {
         dateToSee.setDate(dateToSee.getDate() + 1);
       }
       embedOut = {
@@ -92,9 +94,14 @@ createCommand({
         color: 14825785
       };
     } catch (error) {
-      embedOut = {name: "Error", value: error, inline: false};
+      Bot.helpers.sendMessage(interaction.channelId, { content: "error " + error }); 
+      return;
     }
 
+    if (interaction.notASlashCommand) {
+      Bot.helpers.sendMessage(interaction.channelId, {content: "*:eyeglasses: utilisez les commandes slash si elles sont disponibles !*", embeds: [embedOut]});
+      return;
+    }
     await Bot.helpers.sendInteractionResponse(
       interaction.id,
       interaction.token,
