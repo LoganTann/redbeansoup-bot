@@ -1,14 +1,15 @@
-import { ApplicationCommandTypes, InteractionResponseTypes } from "../../deps.ts";
+import { ApplicationCommandTypes, InteractionResponseTypes, DiscordenoInteraction } from "../../deps.ts";
 import * as helpers from "../utils/helpers.ts";
 import { descalendrierEdt, descalendrierGroupes, getDescalendrier } from "../utils/descalendrier.ts";
 import { createCommand } from "./mod.ts";
+import { BotClient } from "../../bot.ts";
 
 interface embedField {
   name: string,
   value: string,
   inline: boolean,
   _dateForSort: Date
-};
+}
 
 function findEdt(group: string, groupList: descalendrierGroupes): descalendrierEdt[] {
   for (const category of groupList) {
@@ -21,17 +22,18 @@ function findEdt(group: string, groupList: descalendrierGroupes): descalendrierE
   throw "Le groupe n'a pas été trouvé. Utilisez les valeurs de descalendrier : 101 - 112, 201- 209, Apprentissage";
 }
 
-async function getResult(edtList: descalendrierEdt[], dateToSee: Date): Promise<Array<embedField>>{
-  let result = [];
+function getResult(edtList: descalendrierEdt[], dateToSee: Date): Array<embedField>{
+  const result = [];
   for (const edt of edtList) {
     const begin: Date = new Date(edt.start);
     if (begin.getMonth() != dateToSee.getMonth() || begin.getDate() != dateToSee.getDate()) continue;
-    const hour = helpers.dateToDiscordTimestamp(begin, helpers.DiscordTimestampFlag.time);
+    const hourBegin = helpers.dateToDiscordTimestamp(begin, helpers.DiscordTimestampFlag.time);
+    const hourEnd = helpers.dateToDiscordTimestamp(new Date(edt.end), helpers.DiscordTimestampFlag.time);
     const teacher = helpers.pseudonymizeTeacher(edt.enseignant);
     const location = helpers.abbreviateBlockList(edt.location);
     result.push({
       name: edt.name,
-      value: `**Heure**: ${hour}\n**Salle**: ${location}${teacher ? "\n**Ens**: " + teacher : ""}`,
+      value: `${hourBegin} - ${hourEnd}\n**Salle**: ${location}${teacher ? "\n**Ens**: " + teacher : ""}`,
       inline: true,
       _dateForSort: begin
     })
@@ -44,7 +46,7 @@ createCommand({
   name: "edt",
   description: "Obtenez l'EDT depuis l'API de Descalendrier",
   type: ApplicationCommandTypes.ChatInput,  
-  global: true,
+  devOnly: true,
   options: [
     {
       type: 3,
@@ -76,12 +78,12 @@ createCommand({
     }
   ],
 
-  execute: async (Bot, interaction, arg ) => {
+  execute: async (Bot: BotClient, interaction: DiscordenoInteraction) => {
     let embedOut;
     try {
       const group: string = interaction.data.options[0].value;
       const edtList: descalendrierEdt[] = findEdt(group, await getDescalendrier());
-      let dateToSee = new Date();
+      const dateToSee = new Date();
       if (interaction.data.options[1]?.value === "dm") {
         dateToSee.setDate(dateToSee.getDate() + 1);
       }
@@ -90,7 +92,7 @@ createCommand({
         type: "rich",
         url: "https://edt.bde-faction.fr/",
         author: { name: "Descalendrier pour Discord", iconUrl: "https://edt.bde-faction.fr/favicon.png" },
-        fields: await getResult(edtList, dateToSee),
+        fields: getResult(edtList, dateToSee),
         color: 14825785
       };
     } catch (error) {

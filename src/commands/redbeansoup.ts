@@ -6,7 +6,7 @@ createCommand({
   name: "redbeansoup",
   description: "Aide + infos sur le bot",
   type: ApplicationCommandTypes.ChatInput,
-  global: true,
+  devOnly: false,
   execute: async (Bot, interaction) => {
     const ping = Date.now() - snowflakeToTimestamp(interaction.id);
     const embeds = [

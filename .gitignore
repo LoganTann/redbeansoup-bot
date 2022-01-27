@@ -1,7 +1,8 @@
 .env
 
-# vscode ?
+# deno
 registries
+deps
 
 # Discordeno
 fileloader.ts
