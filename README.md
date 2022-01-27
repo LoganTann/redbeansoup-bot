@@ -1,3 +1,9 @@
+# Redbeansoup-bot
+
+Actually, port of the Descalendrier website into a discord bot.
+
+It uses the API created by [@JiveOff](https://github.com/jiveoff) to collect calendar data, and Discordeno lib as the bot framework.
+
 ## Run Bot
 
 Make sure Deno is installed
