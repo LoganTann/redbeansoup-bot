@@ -46,7 +46,7 @@ createCommand({
   name: "edt",
   description: "Obtenez l'EDT depuis l'API de Descalendrier",
   type: ApplicationCommandTypes.ChatInput,  
-  devOnly: true,
+  devOnly: false,
   options: [
     {
       type: 3,
