@@ -2,6 +2,7 @@ import {
     ApplicationCommandTypes,
     InteractionResponseTypes,
     DiscordenoInteraction,
+    Embed,
 } from "../../deps.ts";
 import * as helpers from "../utils/helpers.ts";
 import {
@@ -109,15 +110,19 @@ createCommand({
     ],
 
     execute: async (Bot: BotClient, interaction: DiscordenoInteraction) => {
-        let embedOut;
+        let embedOut: Embed;
         try {
-            const group: string = interaction.data.options[0].value;
+            const cmdArgs = interaction.data?.options;
+            if (!cmdArgs) {
+                throw "Vous devez entrer un groupe";
+            }
+            const group: string = cmdArgs[0].value as string;
             const edtList: descalendrierEdt[] = findEdt(
                 group,
                 await getDescalendrier()
             );
             const dateToSee = new Date();
-            if (interaction.data.options[1]?.value === "dm") {
+            if (cmdArgs[1]?.value === "dm") {
                 dateToSee.setDate(dateToSee.getDate() + 1);
             }
             embedOut = {
@@ -135,18 +140,28 @@ createCommand({
                 color: 14825785,
             };
         } catch (error) {
-            Bot.helpers.sendMessage(interaction.channelId, {
-                content: "error " + error,
-            });
+            if (interaction.channelId) {
+                Bot.helpers.sendMessage(interaction.channelId, {
+                    content: "error " + error,
+                });
+            }
             return;
         }
 
         if (interaction.notASlashCommand) {
-            Bot.helpers.sendMessage(interaction.channelId, {
-                content:
-                    "*:eyeglasses: utilisez les commandes slash si elles sont disponibles !*",
-                embeds: [embedOut],
-            });
+            if (interaction.channelId) {
+                Bot.helpers.sendMessage(interaction.channelId, {
+                    content:
+                        "*:eyeglasses: utilisez les commandes slash si elles sont disponibles !*",
+                    embeds: [embedOut],
+                    messageReference: {
+                        messageId: interaction.id,
+                        channelId: interaction.channelId,
+                        guildId: interaction.guildId,
+                        failIfNotExists: false,
+                    },
+                });
+            }
             return;
         }
         await Bot.helpers.sendInteractionResponse(

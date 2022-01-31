@@ -35,6 +35,12 @@ createCommand({
                 content:
                     "*:eyeglasses: utilisez les commandes slash si elles sont disponibles !*",
                 embeds,
+                messageReference: {
+                    messageId: interaction.id,
+                    channelId: interaction.channelId,
+                    guildId: interaction.guildId,
+                    failIfNotExists: false,
+                },
             });
             return;
         }
