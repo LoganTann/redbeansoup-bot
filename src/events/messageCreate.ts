@@ -29,20 +29,20 @@ async function stickers(bot: BotInterface, interaction: DiscordenoMessage) {
     const avatarUrl = avatarURL(bot, user.id, user.discriminator, {
         avatar: user.avatar,
     });
-
+	const username = interaction.member?.nick || user.username;
     const webhook: DiscordenoWebhook = await getWebhook(bot, interaction);
     if (!webhook.token) {
         log.error(`Could not get webhook in ${interaction.channelId}`);
         return;
     }
     const embed: Embed = {
-        description: `... reacted *${stickerID}*`,
+        description: `${username} reacted *${stickerID}*`,
         image: { url: stickerList[stickerID] },
     };
     Bot.helpers.sendWebhook(webhook.id, webhook.token, {
         content: "",
         avatarUrl,
-        username: interaction.member?.nick || user.username,
+        username,
         embeds: [embed],
     });
     await deleteMessage(
