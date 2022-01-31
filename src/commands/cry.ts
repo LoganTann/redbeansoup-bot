@@ -3,11 +3,11 @@ import { createCommand } from "./mod.ts";
 import { wholesomeTemplate, generateWholesome } from "../utils/wholesome.ts";
 
 const template: wholesomeTemplate = {
-    name: "pat",
-    description: "Give a pat to someone",
-    userArgDescr: "user to pat",
-    title: "*pat pat*",
-    title2: "{user} has given a pat to {target}\n",
+    name: "cry",
+    description: "cry",
+    userArgDescr: "cry to someone",
+    title: "*crying*",
+    title2: "*crying* to {target} !\n",
 };
 
 createCommand(generateWholesome(template));
