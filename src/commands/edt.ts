@@ -84,7 +84,7 @@ createCommand({
                 { name: "Groupe 107", value: "107" },
                 { name: "Groupe 108", value: "108" },
                 { name: "Groupe 109", value: "109" },
-                { name: "Groupe 101", value: "110" },
+                { name: "Groupe 110", value: "110" },
                 { name: "Groupe 111", value: "111" },
                 { name: "Groupe 112", value: "112" },
                 { name: "Groupe 201", value: "201" },
