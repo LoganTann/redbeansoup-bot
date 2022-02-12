@@ -11,6 +11,7 @@ import { Bot } from "../../bot.ts";
 import log from "../utils/logger.ts";
 import { getWebhook } from "../database/getWebhook.ts";
 import stickerList from "../stickerlist.ts";
+import { soup } from "../types/framework.ts";
 
 /**
  * replace someone's message by looking at the stickerlist
@@ -54,6 +55,9 @@ async function stickers(bot: BotInterface, interaction: DiscordenoMessage) {
 }
 
 Bot.events.messageCreate = async (bot, interaction) => {
+
+    soup.onMessage(interaction);
+
     if (interaction.isBot) {
         return;
     }

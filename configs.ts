@@ -1,7 +1,7 @@
 import { dotEnvConfig } from "./deps.ts";
 
 // Load the .env file
-dotEnvConfig();
+dotEnvConfig({export: true});
 
 export interface Config {
   token: string;
