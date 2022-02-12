@@ -4,9 +4,19 @@ Actually, port of the Descalendrier website into a discord bot.
 
 It uses the API created by [@JiveOff](https://github.com/jiveoff) to collect calendar data, and Discordeno lib as the bot framework.
 
-## Run Bot
+## Run Bot from command line
 
-Make sure Deno is installed
+Create a .env file :
+```env
+# Your app id
+clientId=
+# Your app's bot token
+BOT_TOKEN=
+# A guild you are using for __development__
+DEV_GUILD_ID=
+```
+
+Then, make sure Deno is installed
 
 ```powershell
 $ deno run -A --no-check mod.ts
@@ -17,3 +27,17 @@ If you don't want to copy paste the command above, you can also download pm2 and
 ```powershell
 $ pm2 start
 ```
+
+## Run bot using docker
+
+Clone the repo, enter the dir, build the image :
+```powershell
+$ docker build -t redbeansoup-image .
+```
+
+Run the image :
+```powershell
+# it if it's *not* the first time, make sure to do `docker rm redbeansoup-image` before 
+$ docker run -it --env-file .env --name redbeansoup redbeansoup-image
+```
+
