@@ -11,4 +11,5 @@ export default {
     nooo: "https://cdn.discordapp.com/emojis/443144072660647946.webp?quality=lossless",
     moo: "https://cdn.discordapp.com/emojis/437637372952313868.webp?quality=lossless",
     sad: "https://cdn.discordapp.com/emojis/437639230617944065.webp?quality=lossless",
+    panik: "https://media.discordapp.net/attachments/464391820349014016/962845013677580288/unknown.png"
 } as StringMap;
