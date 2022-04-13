@@ -5,13 +5,6 @@ import {
     DiscordenoWebhook,
 } from "../../deps.ts";
 import { webhooksSchema, webhooks } from "./mod.ts";
-
-/**
- * Once a webhook is created, its token is stored in database.
- * This function translates the token to an actual webhook object. 
- * @param entry A row from the database of type webhooksSchema
- * @returns an object of type DiscordenoWebhook
- */
 function unserializeWebhook(
     entry: webhooksSchema | undefined
 ): DiscordenoWebhook {
@@ -25,14 +18,6 @@ function unserializeWebhook(
     };
 }
 
-/**
- * Creates (or retrieves if cached) a webhook object for the channel in which the message was sent.
- * Uses a simple way to cache the webhook token (but unsafe, since channelId as primary key,
- * there is a very small probability that two servers could have two identical channelId).
- * @param bot The reference to the bot instance
- * @param interaction The message object that triggered the event
- * @returns a promise that gives a usable discordeno webhook object for the channel in which the message was sent.
- */
 export async function getWebhook(
     bot: Bot,
     interaction: DiscordenoMessage
