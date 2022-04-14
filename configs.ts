@@ -1,4 +1,5 @@
 import { dotEnvConfig } from "./deps.ts";
+import { OpenAI } from 'https://deno.land/x/openai/mod.ts';
 
 // Get the .env file that the user should have created, and get the token
 const env = dotEnvConfig({ export: true });
@@ -18,3 +19,5 @@ export const configs = {
   devGuildId: BigInt(env.DEV_GUILD_ID!),
   prefix: "$",
 };
+
+export const myOpenAi = new OpenAI(env.OPENAI_TOKEN);

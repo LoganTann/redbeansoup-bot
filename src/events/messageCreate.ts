@@ -6,7 +6,11 @@ import {
     avatarURL,
     Embed,
     deleteMessage,
+    openai
 } from "../../deps.ts";
+
+import { myOpenAi } from "../../configs.ts";
+
 import { Bot } from "../../bot.ts";
 import log from "../utils/logger.ts";
 import { getWebhook } from "../database/getWebhook.ts";
@@ -53,12 +57,46 @@ async function stickers(bot: BotInterface, interaction: DiscordenoMessage) {
     );
 }
 
+
+const OPENAI_CMD_PREFIX = "$momo";
+/**
+ * Asks the AI to autocomplete the sentence
+ */
+async function runOpenai(bot: BotInterface, interaction: DiscordenoMessage) {
+    const prompt = interaction.content.replace(new RegExp('\\n|\\'+OPENAI_CMD_PREFIX, "gm"), " ").trim();
+    let result = "Error : ";
+    try {
+        const response: Response = await myOpenAi.createCompletion(prompt, "text-davinci-002", 0.3, 256);
+        result = response.choices.map(choice => choice.text).join("\n");
+    } catch (e) {
+        result += e.toString();
+        console.error(e);
+    }
+    
+    Bot.helpers.sendMessage(interaction.channelId, {
+        content:
+            result + "\n*Voir toutes les possibilités sur beta.openai.com*",
+        messageReference: {
+            messageId: interaction.id,
+            channelId: interaction.channelId,
+            guildId: interaction.guildId,
+            failIfNotExists: false,
+        },
+    });
+}
+
 Bot.events.messageCreate = async (bot, interaction) => {
     if (interaction.isBot) {
         return;
     }
     //
     await stickers(bot, interaction);
+
+    
+    if (interaction.content.startsWith(OPENAI_CMD_PREFIX)) {
+        await runOpenai(bot, interaction);
+        return;
+    }
 
     const result = interaction.content.match(/^\s*\$(\w+)(.+)?/) || [];
     if (result.length < 3) {
