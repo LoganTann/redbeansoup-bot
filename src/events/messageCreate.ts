@@ -66,8 +66,10 @@ async function runOpenai(bot: BotInterface, interaction: DiscordenoMessage) {
     const prompt = interaction.content.replace(new RegExp('\\n|\\'+OPENAI_CMD_PREFIX, "gm"), " ").trim();
     let result = "Error : ";
     try {
+        await bot.helpers.startTyping(interaction.channelId);
         const response: Response = await myOpenAi.createCompletion(prompt, "text-davinci-002", 0.3, 256);
-        result = response.choices.map(choice => choice.text).join("\n");
+        result = "… ";
+        result += response.choices.map(choice => choice.text).join("\n");
     } catch (e) {
         result += e.toString();
         console.error(e);
@@ -75,7 +77,7 @@ async function runOpenai(bot: BotInterface, interaction: DiscordenoMessage) {
     
     Bot.helpers.sendMessage(interaction.channelId, {
         content:
-            result + "\n*Voir toutes les possibilités sur beta.openai.com*",
+            result + "\n\n*Voir toutes les possibilités sur beta.openai.com*",
         messageReference: {
             messageId: interaction.id,
             channelId: interaction.channelId,

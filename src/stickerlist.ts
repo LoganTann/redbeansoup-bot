@@ -13,4 +13,5 @@ export default {
     sad: "https://cdn.discordapp.com/emojis/437639230617944065.webp?quality=lossless",
     panik: "https://media.discordapp.net/attachments/464391820349014016/962845013677580288/unknown.png",
     redbeansoup: "https://cdn.discordapp.com/emojis/464529611292934156.webp",
+    poisson: "https://media.discordapp.net/attachments/464393260534726666/942534297775124510/unknown.png"
 } as StringMap;
