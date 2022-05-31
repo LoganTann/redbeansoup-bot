@@ -16,6 +16,8 @@ import log from "../utils/logger.ts";
 import { getWebhook } from "../database/getWebhook.ts";
 import stickerList from "../stickerlist.ts";
 
+import EmojiStorage from "./dirtyEmojiTracker/emojiStorage.ts";
+
 /**
  * replace someone's message by looking at the stickerlist
  * @param bot The reference to the bot instance
@@ -87,13 +89,26 @@ async function runOpenai(bot: BotInterface, interaction: DiscordenoMessage) {
     });
 }
 
+
+async function emojisTracking(bot: BotInterface, interaction: DiscordenoMessage) {
+    const msg = interaction.content;
+    const emojis = msg.match(/<:\w+:(\d+)>/g);
+    if (!emojis) return;
+    const instance = EmojiStorage.getInstance();
+    for (const emote of emojis) {
+        instance.incrementEmoji(""+interaction.guildId, emote);
+    }
+}
+
 Bot.events.messageCreate = async (bot, interaction) => {
     if (interaction.isBot) {
         return;
     }
-    //
-    await stickers(bot, interaction);
+    
+    
+    emojisTracking(bot, interaction);
 
+    await stickers(bot, interaction);
     
     if (interaction.content.startsWith(OPENAI_CMD_PREFIX)) {
         await runOpenai(bot, interaction);
