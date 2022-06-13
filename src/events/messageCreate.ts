@@ -94,8 +94,11 @@ async function emojisTracking(bot: BotInterface, interaction: DiscordenoMessage)
     const msg = interaction.content;
     const emojis = msg.match(/<:\w+:(\d+)>/g);
     if (!emojis) return;
+
+    let uniqueEmojis = [...new Set(emojis)];
+
     const instance = EmojiStorage.getInstance();
-    for (const emote of emojis) {
+    for (const emote of uniqueEmojis) {
         instance.incrementEmoji(""+interaction.guildId, emote);
     }
 }

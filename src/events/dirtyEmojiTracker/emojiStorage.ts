@@ -1,3 +1,5 @@
+import numberToEmoji from "./numberToEmoji.ts";
+
 export default class EmojiStorage {
 
     static instance = null;
@@ -14,7 +16,7 @@ export default class EmojiStorage {
 
         setInterval(() => {
             this.save();
-        }, 1000 * 60 * 60 * 24);
+        }, 1000 * 60 * 60);
     }
 
     path = "./EmojiStorage.json";
@@ -40,9 +42,9 @@ export default class EmojiStorage {
         console.log("[EmojiStorage > save] : ", jsonString);
     }
     
-    async load() {
+    load() {
         try {
-            const jsonString = await Deno.readTextFile(this.path);
+            const jsonString = Deno.readTextFileSync(this.path);
             this.emojis = JSON.parse(jsonString);
         } catch (e) {
             console.error("[EmojiStorage > Load err]", e);
@@ -52,12 +54,17 @@ export default class EmojiStorage {
     }
 
     getEmojis(guildId){
-        const emojisRef = this.emojis[guildId] || {};
-        return Object.keys(emojisRef)
-            .sort((aLabel, bLabel) => emojisRef[aLabel] - emojisRef[bLabel])
-            .splice(0, 10)
-            .reverse()
-            .map((label, i) => `\`${i+1}.\` ${label} : ${emojisRef[label]}` )
-            .join("\n");
+        const emojisRef :Record<string, number> = this.emojis[guildId] || {":x:": 0};
+        try {
+            return Object.entries(emojisRef)
+                .sort((a, b) => b[1] - a[1])
+                .map((emoji, i) => {
+                    if (i > 9) return undefined;
+                    return `${numberToEmoji(i+1)} - ${emoji[0]} : ${emoji[1]}`
+                } )
+                .join("\n");
+        } catch(e) {
+            return "Error : " + e;
+        }
     }
 };
