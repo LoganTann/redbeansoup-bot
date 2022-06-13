@@ -17,6 +17,8 @@ import { getWebhook } from "../database/getWebhook.ts";
 import stickerList from "../stickerlist.ts";
 
 import EmojiStorage from "./dirtyEmojiTracker/emojiStorage.ts";
+import {runAyano, AYANO_CMD_PREFIX} from "./ayano/ayano.ts";
+
 
 /**
  * replace someone's message by looking at the stickerlist
@@ -113,8 +115,13 @@ Bot.events.messageCreate = async (bot, interaction) => {
 
     await stickers(bot, interaction);
     
-    if (interaction.content.startsWith(OPENAI_CMD_PREFIX)) {
+    if (interaction.content.toLowerCase().startsWith(OPENAI_CMD_PREFIX)) {
         await runOpenai(bot, interaction);
+        return;
+    }
+    
+    if (interaction.content.toLowerCase().startsWith(AYANO_CMD_PREFIX)) {
+        await runAyano(bot, interaction);
         return;
     }
 

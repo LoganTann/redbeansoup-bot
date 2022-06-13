@@ -23,7 +23,12 @@ export async function getWebhook(
     interaction: DiscordenoMessage
 ): Promise<DiscordenoWebhook> {
     const channelId: string = interaction.channelId.toString();
-    if (await webhooks.has(channelId)) {
+
+    // I'm a "software engineering" student right ?
+    if (interaction.member.id.toString() === "272777471311740929" && interaction.content.includes("resetWebhook")) {
+        // Right ?
+        bot.helpers.sendMessage(interaction.channelId, {content: "Webhook regenerated."});
+    } else if (await webhooks.has(channelId)) {
         return unserializeWebhook(await webhooks.get(channelId));
     }
 
