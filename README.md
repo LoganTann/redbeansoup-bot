@@ -1,7 +1,7 @@
 # Redbeansoup-bot
 
-> **Important note** :  
-> The current online bot runs this code, but a rewrite is planned at https://github.com/LoganTann/redbeansoup-v2  
+> ## Important note 
+> The bot actually runs the code in the [prod](https://github.com/LoganTann/redbeansoup-bot/tree/prod) branch, but a rewrite is planned at https://github.com/LoganTann/redbeansoup-v2  
 > No features will be added in this repo, only bug fixes
 
 Actually, port of the Descalendrier website into a discord bot.
