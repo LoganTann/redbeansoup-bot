@@ -180,8 +180,8 @@ export class MeteoHelpers {
             let toAdd = `<t:${forecastItem.dt}:t> `;
             toAdd += forecastItem.T.value + "°C ";
             try {
-                toAdd +=
-                    iconToEmoji[forecastItem.weather.icon.replace("n", "j")];
+                const emote = iconToEmoji[forecastItem.weather.icon.replace("bis", "").replace("ter", "").replace("n", "j")];
+                toAdd += emote || forecastItem.weather.icon || "oskour";
             } catch (_e) {
                 // catch if the weather icon is wrong. Should never happen.
             }

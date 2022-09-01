@@ -6,11 +6,19 @@ import {
     avatarURL,
     Embed,
     deleteMessage,
+    openai
 } from "../../deps.ts";
+
+import { myOpenAi } from "../../configs.ts";
+
 import { Bot } from "../../bot.ts";
 import log from "../utils/logger.ts";
 import { getWebhook } from "../database/getWebhook.ts";
 import stickerList from "../stickerlist.ts";
+
+import EmojiStorage from "./dirtyEmojiTracker/emojiStorage.ts";
+import {runAyano, AYANO_CMD_PREFIX} from "./ayano/ayano.ts";
+
 
 /**
  * replace someone's message by looking at the stickerlist
@@ -53,12 +61,69 @@ async function stickers(bot: BotInterface, interaction: DiscordenoMessage) {
     );
 }
 
+
+const OPENAI_CMD_PREFIX = "$momo";
+/**
+ * Asks the AI to autocomplete the sentence
+ */
+async function runOpenai(bot: BotInterface, interaction: DiscordenoMessage) {
+    const prompt = interaction.content.replace(new RegExp('\\n|\\'+OPENAI_CMD_PREFIX, "gm"), " ").trim();
+    let result = "Error : ";
+    try {
+        await bot.helpers.startTyping(interaction.channelId);
+        const response: Response = await myOpenAi.createCompletion(prompt, "text-davinci-002", 0.3, 256);
+        result = "… ";
+        result += response.choices.map(choice => choice.text).join("\n");
+    } catch (e) {
+        result += e.toString();
+        console.error(e);
+    }
+    
+    Bot.helpers.sendMessage(interaction.channelId, {
+        content:
+            result + "\n\n*Voir toutes les possibilités sur beta.openai.com*",
+        messageReference: {
+            messageId: interaction.id,
+            channelId: interaction.channelId,
+            guildId: interaction.guildId,
+            failIfNotExists: false,
+        },
+    });
+}
+
+
+async function emojisTracking(bot: BotInterface, interaction: DiscordenoMessage) {
+    const msg = interaction.content;
+    const emojis = msg.match(/<:\w+:(\d+)>/g);
+    if (!emojis) return;
+
+    let uniqueEmojis = [...new Set(emojis)];
+
+    const instance = EmojiStorage.getInstance();
+    for (const emote of uniqueEmojis) {
+        instance.incrementEmoji(""+interaction.guildId, emote);
+    }
+}
+
 Bot.events.messageCreate = async (bot, interaction) => {
     if (interaction.isBot) {
         return;
     }
-    //
+    
+    
+    emojisTracking(bot, interaction);
+
     await stickers(bot, interaction);
+    
+    if (interaction.content.toLowerCase().startsWith(OPENAI_CMD_PREFIX)) {
+        await runOpenai(bot, interaction);
+        return;
+    }
+    
+    if (interaction.content.toLowerCase().startsWith(AYANO_CMD_PREFIX)) {
+        await runAyano(bot, interaction);
+        return;
+    }
 
     const result = interaction.content.match(/^\s*\$(\w+)(.+)?/) || [];
     if (result.length < 3) {

@@ -1,2 +1,0 @@
-# Assumes that dockerfile did the job to import only .ts files and not other things like the db
-fileloader.ts

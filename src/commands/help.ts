@@ -2,7 +2,6 @@ import {
     ApplicationCommandTypes,
     InteractionResponseTypes,
 } from "../../deps.ts";
-import { snowflakeToTimestamp } from "../utils/helpers.ts";
 import { createCommand } from "./mod.ts";
 
 createCommand({
@@ -11,7 +10,6 @@ createCommand({
     type: ApplicationCommandTypes.ChatInput,
     devOnly: false,
     execute: async (Bot, interaction) => {
-        const ping = Date.now() - snowflakeToTimestamp(interaction.id);
         const embeds = [
             {
                 title: "Commandes Kagerou Project FR",
@@ -51,6 +49,11 @@ createCommand({
                         value: "Usage : `/meteo`\n\nAffiche la météo du campus en temps réel. Utilise l'API privée de MeteoFrance ([Client](https://github.com/LoganTann/redbeansoup-bot/blob/main/src/utils/descanicule.ts#L11) par @ShinProg)",
                         inline: true,
                     },
+                    {
+                        name: "<:openai:964272288478425108> `$momo`",
+                        value: "Usage : `$momo`\n\nMomo réponds à toutes vos demandes, grâce à l'[API Beta d'OpenAI](https://beta.openai.com/examples)",
+                        inline: true
+                    },
                 ],
                 color: 14825785,
             },
@@ -76,7 +79,6 @@ createCommand({
             {
                 type: InteractionResponseTypes.ChannelMessageWithSource,
                 data: {
-                    content: `J'ai mis ${ping}ms pour répondre !`,
                     embeds,
                 },
             }
