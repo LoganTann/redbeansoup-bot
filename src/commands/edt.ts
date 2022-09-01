@@ -96,7 +96,7 @@ createCommand({
                 { name: "Groupe 207", value: "207" },
                 { name: "Groupe 208", value: "208" },
                 { name: "Groupe 209", value: "209" },
-                { name: "Groupe APP", value: "Apprentissage" },
+                { name: "Groupe APP", value: "210" },
             ],
         },
         {

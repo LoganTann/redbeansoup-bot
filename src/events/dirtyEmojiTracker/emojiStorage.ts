@@ -50,7 +50,7 @@ export default class EmojiStorage {
             console.error("[EmojiStorage > Load err]", e);
             this.emojis = {};
         }
-        console.log("[EmojiStorage > Loaded]", this.emojis );
+        console.log("[EmojiStorage > Loaded]");
     }
 
     getEmojis(guildId){
