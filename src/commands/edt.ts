@@ -25,7 +25,7 @@ function findEdt(
             }
         }
     }
-    throw "Le groupe n'a pas été trouvé. Utilisez les valeurs de descalendrier : 101 - 112, 201- 209, Apprentissage";
+    throw "Le groupe n'a pas été trouvé. Utilisez les valeurs de descalendrier : 101 - 112, 201 - 210";
 }
 
 function getResult(
@@ -131,10 +131,10 @@ createCommand({
                     helpers.DiscordTimestampFlag.date
                 )}`,
                 type: "rich",
-                url: "https://edt.bde-faction.fr/",
+                url: "https://descalendrier.jiveoff.fr",
                 author: {
                     name: "Descalendrier pour Discord",
-                    iconUrl: "https://edt.bde-faction.fr/favicon.png",
+                    iconUrl: "https://descalendrier.jiveoff.fr/favicon.png",
                 },
                 fields: getResult(edtList, dateToSee),
                 color: 14825785,
