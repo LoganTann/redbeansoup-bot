@@ -7,4 +7,5 @@ deps
 # Discordeno
 fileloader.ts
 db/
-EmojiStorage.json
+
+/EmojiStorage.json
