@@ -103,6 +103,29 @@ async function emojisTracking(bot: BotInterface, interaction: DiscordenoMessage)
     }
 }
 
+
+function quoifeur(bot: BotInterface, interaction: DiscordenoMessage) {
+	const msg = ` ${interaction.content.toLowerCase()} `;
+	let result;
+	if (msg.match(/[^a-z]feur[^a-z]/g)) {
+		result = "<:ban:1047094091499962418>";
+	} else if (msg.endsWith("quoi ? ") || msg.endsWith("quoi ") || msg.endsWith("quoi? ")) {
+		result = msg.replace("quoi", " <:feur:1047094129726853120>");
+	}
+    if (result) {
+	    Bot.helpers.sendMessage(interaction.channelId, {
+	        content: result,
+	        messageReference: {
+	            messageId: interaction.id,
+	            channelId: interaction.channelId,
+	            guildId: interaction.guildId,
+	            failIfNotExists: true,
+	        },
+	    });
+    }
+    return result;
+}
+
 Bot.events.messageCreate = async (bot, interaction) => {
     if (interaction.isBot) {
         return;
@@ -121,6 +144,10 @@ Bot.events.messageCreate = async (bot, interaction) => {
     if (interaction.content.toLowerCase().startsWith(AYANO_CMD_PREFIX)) {
         await runAyano(bot, interaction);
         return;
+    }
+
+    if (quoifeur(bot, interaction)) {
+    	return;
     }
 
     const result = interaction.content.match(/^\s*\$(\w+)(.+)?/) || [];
