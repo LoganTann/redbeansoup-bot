@@ -12,7 +12,23 @@ createCommand({
     execute: async (Bot, interaction) => {
         const embeds = [
             {
-                title: "Commandes Kagerou Project FR",
+                title: "OpenAI",
+                color: 14825785,
+                fields: [
+                    {
+                        name: "`$momo`",
+                        value: "Usage : `$momo`\n\nréagir avec GPT-3, grâce à l'[API Beta d'OpenAI](https://beta.openai.com/examples)",
+                        inline: true
+                    },
+                    {
+                        name: "`$ayano`",
+                        value: "Usage : `$ayano [clear|<prompt>]`\n\n le `$momo` mais qui tente de se comporter comme un tchatbot",
+                        inline: true
+                    }
+                ]
+            },
+            {
+                title: "Commandes de serveurs Kagerou Project FR",
                 color: 14825785,
                 fields: [
                     {
@@ -20,40 +36,40 @@ createCommand({
                         value: "`/redbeansoup` : En savoir plus à propos du redbeansoup\n`/stickers` : Affiche tous les stickers utilisables\n\nLes stickers n'ont pas besoin de préfixes et supprimeront le message d'origine.\nLes commandes wholesome s'utilisent comme des commandes normales",
                     },
                     {
-                        name: "Wholesome",
-                        value: "`/blush`\n`/cry`\n`/handhold`\n`/shut` \n`/hug`\n`/pat`\n`/punch`",
+                        name: "Wholesome (1/2)",
+                        value: "`/blush`\n`/cry`\n`/handhold`\n`/shut`",
                         inline: true,
                     },
                     {
-                        name: "Stickers (1/2)",
-                        value: "`dommage`\n`yay`\n`xd`\n`shrug`\n`fuck`\n`sad`\n`depit`",
-                        inline: true,
-                    },
-                    {
-                        name: "Stickers (2/2)",
-                        value: "`nooo`\n`moo`",
+                        name: "Wholesome (2/2)",
+                        value: "\n`/hug`\n`/pat`\n`/punch`",
                         inline: true,
                     },
                 ],
             },
             {
-                title: "Commandes Paris Descartes",
+                title: "Commandes de serveurs IUT Paris Descartes",
                 fields: [
                     {
-                        name: "<:descalendrier:938194213470883931> Descalendrier",
+                        name: "Descalendrier",
                         value: "Usage : `/edt [groupe] ([dm])`\n\nAffiche l'emploi du temps d'un groupe. Utilise l'API du site [Descalendrier](https://edt.bde-faction.fr) (crée par @JiveOff)",
                         inline: true,
                     },
                     {
-                        name: "<:p13j:938158210114801774> Descanicule",
+                        name: "Descanicule",
                         value: "Usage : `/meteo`\n\nAffiche la météo du campus en temps réel. Utilise l'API privée de MeteoFrance ([Client](https://github.com/LoganTann/redbeansoup-bot/blob/main/src/utils/descanicule.ts#L11) par @ShinProg)",
                         inline: true,
-                    },
+                    }
+                ],
+                color: 14825785,
+            },
+            {
+                title: "Note de déprécation",
+                fields: [
                     {
-                        name: "<:openai:964272288478425108> `$momo`",
-                        value: "Usage : `$momo`\n\nMomo réponds à toutes vos demandes, grâce à l'[API Beta d'OpenAI](https://beta.openai.com/examples)",
-                        inline: true
-                    },
+                        name: "Ceci est la version 1 du bot, codée avec les pieds",
+                        value: "Participez au développement de la version 2 sur https://github.com/LoganTann/redbeansoup-v2/"
+                    }
                 ],
                 color: 14825785,
             },

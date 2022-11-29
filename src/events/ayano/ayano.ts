@@ -38,7 +38,7 @@ export async function runAyano(bot, interaction) {
         let debugcontent;
         if (prompt.startsWith("clear")) {
             ayanoInstance.clear();
-            debugcontent = "I have been through a timeline reset uwu\nSee you again !";
+            debugcontent = "I have been through a timeline reset\nSee you again !";
         } else {
             debugcontent = "debug : ```\n"+ayanoInstance.buildRequest("")+"\n```";
         }
@@ -59,7 +59,7 @@ export async function runAyano(bot, interaction) {
     let discordOutput = "";
     try {
         const processedPrompt = ayanoInstance.buildRequest(prompt);
-        const AiResponse: Response = await myOpenAi.createCompletion(processedPrompt, "text-davinci-002", 0.3, 256);
+        const AiResponse: Response = await myOpenAi.createCompletion(processedPrompt, "text-curie-001", 0.5, 70, 1, 0.5, 0, '[Logan]');
         const AiSentence = AiResponse.choices[0].text;
         discordOutput += AiSentence;
         ayanoInstance.saveInteraction(prompt, AiSentence);

@@ -31,7 +31,6 @@ async function stickers(bot: BotInterface, interaction: DiscordenoMessage) {
     if (typeof stickerList[stickerID] !== "string") {
         return; // no matches
     }
-    log.info("Sticker found: " + stickerID);
 
     const user = await getUser(bot, interaction.authorId);
     const avatarUrl = avatarURL(bot, user.id, user.discriminator, {
@@ -71,7 +70,7 @@ async function runOpenai(bot: BotInterface, interaction: DiscordenoMessage) {
     let result = "Error : ";
     try {
         await bot.helpers.startTyping(interaction.channelId);
-        const response: Response = await myOpenAi.createCompletion(prompt, "text-davinci-002", 0.3, 256);
+        const response: Response = await myOpenAi.createCompletion(prompt, "text-davinci-003", 0.3, 256);
         result = "… ";
         result += response.choices.map(choice => choice.text).join("\n");
     } catch (e) {
@@ -80,8 +79,7 @@ async function runOpenai(bot: BotInterface, interaction: DiscordenoMessage) {
     }
     
     Bot.helpers.sendMessage(interaction.channelId, {
-        content:
-            result + "\n\n*Voir toutes les possibilités sur beta.openai.com*",
+        content: result,
         messageReference: {
             messageId: interaction.id,
             channelId: interaction.channelId,
