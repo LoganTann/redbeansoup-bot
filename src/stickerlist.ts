@@ -12,4 +12,5 @@ export default {
     monkey: "https://media.discordapp.net/attachments/961323014966878208/983482929214812287/unknown.png",
     nayadios: "https://media.discordapp.net/attachments/961323014966878208/983480699040444436/makeitmeme_w5NxF.png",
     nayaphone: "https://media.discordapp.net/attachments/464387069670850560/983479403319271464/unknown.png",
+    nayallo: "https://media.discordapp.net/attachments/961323014966878208/1016821019224309821/unknown.png",
 } as StringMap;
