@@ -59,7 +59,7 @@ export async function runAyano(bot, interaction) {
     let discordOutput = "";
     try {
         const processedPrompt = ayanoInstance.buildRequest(prompt);
-        const AiResponse: Response = await myOpenAi.createCompletion(processedPrompt, "text-curie-001", 0.5, 70, 1, 0.5, 0, '[Logan]');
+        const AiResponse: Response = await myOpenAi.createCompletion(processedPrompt, "text-curie-001", 0.5, 70, 1, 0.5, 0, ['###', '[Logan]']);
         const AiSentence = AiResponse.choices[0].text;
         discordOutput += AiSentence;
         ayanoInstance.saveInteraction(prompt, AiSentence);
